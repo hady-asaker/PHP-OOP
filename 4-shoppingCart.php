@@ -66,7 +66,7 @@ class ShoppingCart
     
         // Check if an item with the same name already exists in the cart or not
         foreach ($this->items as $item) {
-            if ($item->getName() == $name) {
+            if ($item->getName() == $name && $item->getPrice() == $price) {
                 $existingItem = $item;
                 break;
             }
