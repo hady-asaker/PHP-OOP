@@ -58,20 +58,52 @@ class Library {
     if ($isExist == null) {
       $newBook = new Book($name, $author, $quantity);
       $this->Books[] = $newBook;  
+      $this->authors[] = $author;
     }
   }
-  public function removeBook()
+
+  public function removeBook($name, $quantity)
   {
-    # code...
+    $isExist = false;
+    foreach ($this->Books as $key => $book) {
+      if ($name == $book->getBookName() && $quantity >= $book->getQuantity()) {
+        unset($this->Books[$key]);
+        $isExist = true;
+      }
+      elseif($name == $book->getBookName() && $quantity < $book->getQuantity()){
+        $book->setQuantity($book->getQuantity() - $quantity);
+        $isExist = true;
+      }
+    }
+    if (!$isExist) {
+      echo "This Book [ $name ] Not Found" . "<br>";
+    }
   }
-  public function addAuthor()
+
+  public function addAuthor($name)
   {
-    # code...
+    if (!in_array($name, $this->authors)) {
+      $this->authors[] = $name;
+      echo "Author [ $name ] has been added" . "<br>";
+    }
+    else {
+      echo "This Author [ $name ] Already Exists" . "<br>";
+    }
+      
   }
-  public function removeAuthor()
+  public function removeAuthor($name)
   {
-    # code...
+    $key = array_search($name, $this->authors);
+
+    if ($key != false) {
+      unset($this->authors[$key]);
+      echo "Author [ " . $name . " ] has been removed." . "<br>";
+    }
+    else {
+      echo "This Author [ $name ] Not Exists" . "<br>";
+    }
   }
+
   public function addBorrower()
   {
     # code...
@@ -92,6 +124,14 @@ $test = new Library();
 $test->addBook("Book1", "kiki", 5);
 $test->addBook("Book2", "mimi", 5);
 $test->addBook("Book3", "momo", 5);
+
+$test->removeBook("Book3", 1);
+
+$test->addAuthor("momo");
+$test->addAuthor("Hady");
+
+$test->removeAuthor("Hady");
+$test->removeAuthor("Hady");
 
 echo "<pre>"; print_r($test); echo "</pre>";
 
