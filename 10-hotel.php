@@ -11,15 +11,18 @@
 
 class Hotel{
 
-  private $allRooms = 50;
-  public $availableRooms = 2;
+  private $allRooms = 500;
+  public $availableRooms = 30;
   public $Guests = [];
   public $reservations = [];
 
   public function booking($name)
   {
+    // Check available rooms
     if ($this->availableRooms > 0 ) {
+      // Check if there is no reservation with the same name
       if(!in_array($name, $this->reservations)){
+        // Book the room
         $this->reservations[] = $name;
         --$this->availableRooms;
       }
@@ -30,14 +33,14 @@ class Hotel{
     else {
       echo "No Available Room" . "<br>";
     }
-    
   }
 
   public function cancelBooking($name)
   {
+    // Search for the reservation with the given name
     $searching = array_search($name, $this->reservations);    // returning index
-    if($searching){
-      echo $searching;  // 2
+    if($searching !== false){ // Check if the reservation was found
+      // Remove the reservation and increase the available rooms
       array_splice($this->reservations, $searching, 1);
       ++$this->availableRooms;
     }
@@ -48,29 +51,35 @@ class Hotel{
 
   public function checkIn($name)
   {
+    // Check if there are any available rooms or the guest has a reservation
     if ($this->availableRooms > 0 || in_array($name, $this->reservations)) {
+      // Check if the guest is not already checked in
       if (!in_array($name, $this->Guests)) {
+        // If the guest has a reservation, remove it and increase the available rooms
         if (in_array($name, $this->reservations)) {
           array_splice($this->reservations, array_search($name, $this->reservations), 1);
           ++$this->availableRooms;
         }
+        // Add Guest and decrease the available rooms
         $this->Guests[] = $name;
         --$this->availableRooms;
       } else {
-        echo "You Are already Checked In";
+        echo "You Are already Checked In" . "<br>";
       }
     } else {
-      echo "No Available Room" . "<br>";
+      echo "No Available Rooms" . "<br>";
     }
   }
 
   public function checkOut($name)
   {
     if (in_array($name, $this->Guests)) {
+      // Check the guest out and increase the available rooms
       array_splice($this->Guests, array_search($name, $this->Guests), 1);
       ++$this->availableRooms;  
     } else {
-      echo "You didn't Checked in to check out";
+      // The guest didn't check in yet
+      echo "You didn't Checked in to check out" . "<br>";
     }
 
   }
@@ -82,30 +91,30 @@ class Hotel{
 
 }
 
+// Creating a new instance
+$test = new Hotel();
+ 
+$test->booking("Hady");               // Booking a room for "Hady"
+$test->cancelBooking("Hady");         // Cancelling the booking for "Hady"
+$test->cancelBooking("Hady");         // Will fail
 
-$test = new Hotel;
+// Booking a room for "ahmed", "mohamed", "karim"
+$test->booking("ahmed");
+$test->booking("mohamed");
+$test->booking("karim");
 
-// $test->booking("Hady");
-// $test->cancelBooking("Hady");
-// $test->booking("Hady");
-// $test->cancelBooking("Hady");
-
-// $test->booking("ahmed");
-// $test->booking("kar");
-$test->checkIn("kar");
+// Checking in "mohamed" and "ahmed" they've already booked
+$test->checkIn("mohamed");
 $test->checkIn("ahmed");
-// $test->checkIn("koko");
-$test->checkOut("ahmed");
-$test->checkOut("kar");
-$test->checkOut("kara");
 
-// $test->booking("far");
-// $test->booking("bar");
-// $test->cancelBooking("far");
-// // $test->booking("ffffffffff");
-// $test->cancelBooking("kar");
-// $test->cancelBooking("ahmed");
-// $test->cancelBooking("far");
+// checking in "saber", "fager"
+$test->checkIn("saber");
+$test->checkIn("fager");
+
+// checking out "ahmed" and "mohamed"
+$test->checkOut("ahmed");
+$test->checkOut("mohamed");
+$test->checkOut("mohamed");             // Will Fail
 
 echo "<pre>"; print_r($test); echo "</pre>";
 
